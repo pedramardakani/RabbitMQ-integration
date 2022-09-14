@@ -38,6 +38,8 @@ def main(connection: pika.BlockingConnection):
 
     channel.queue_declare(qname)
     channel.basic_consume(queue=qname, auto_ack=True, on_message_callback=callback)
+
+    print(">>> Waiting for messages 🤹 Press CTRL+C to exit ⛔")
     channel.start_consuming()
 
 

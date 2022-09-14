@@ -31,10 +31,12 @@ def main(connection: pika.BlockingConnection):
 
     # Logic
     def callback(ch, method, props, body: bytes) -> None:
-        print(f">>> Received: '{body}'")
+        print(f">>> 📨 Received  '{body}' ")
 
     channel.queue_declare(qname)
     channel.basic_consume(queue=qname, auto_ack=True, on_message_callback=callback)
+
+    print(">>> Waiting for messages 🤹 Press CTRL+C to exit ⛔")
     channel.start_consuming()
 
 
