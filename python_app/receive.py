@@ -30,7 +30,10 @@ def main(connection: pika.BlockingConnection):
     channel = connection.channel()
 
     # Logic
-    def callback(ch, method, props, body: bytes) -> None:
+    def callback(channel: pika.channel.Channel,
+                 method: pika.spec.Basic.Deliver,
+                 properties: pika.spec.BasicProperties,
+                 body: bytes) -> str:
         print(f">>> 📨 Received  '{body}' ")
 
     channel.queue_declare(qname)
@@ -48,7 +51,7 @@ if __name__ == '__main__':
     try:
         main(connection)
     except KeyboardInterrupt:
-        print('\nWARNING: interrupted\n')
+        print('\nWARNING: interrupted ⛔\n')
         connection.close()
         try:
             sys_exit(0)
