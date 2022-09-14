@@ -1,0 +1,4 @@
+* RabbitMQ integration
+
+Dockerized RabbitMQ integration samples.
+These programs are heavily inspired from: https://www.rabbitmq.com/getstarted.html

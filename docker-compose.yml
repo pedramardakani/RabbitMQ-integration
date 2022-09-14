@@ -1,0 +1,39 @@
+services:
+
+# Get the environment variables from the '.env' file
+
+  # The RabbitMQ service
+  rbmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"    # the queues
+      - "8080:15672"   # the http management page
+    hostname: ${CUSTOM_HOSTNAME}
+
+    # It takes a while for RabbitMQ to get ready
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  # The sample python application
+  python_app:
+    build:
+      target: prod
+      context: python_app
+      dockerfile: Dockerfile
+    volumes:
+      - ./python_app:/app
+
+    # Run the receive.py python program after RabbitMQ is ready, or
+    # you'll get 'pika.exceptions.AMQPConnectionError'
+    command: /app/run.sh
+    environment:
+      - RBMQ_QUEUE=${RBMQ_QUEUE:-test}
+      - CUSTOM_HOSTNAME=${CUSTOM_HOSTNAME}
+      - RABBITMQ_NODE_PORT=${RABBITMQ_NODE_PORT:-5672}
+    depends_on:
+      rbmq:
+        # Make sure the RabbitMQ service is up and ready before running
+        condition: service_healthy
