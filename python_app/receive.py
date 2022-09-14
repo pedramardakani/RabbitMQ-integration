@@ -7,12 +7,12 @@ from sys import exit as sys_exit
 #
 # If running from a docker compose, use the environment variables
 # given, otherwise, define them with the default values.
-host     : str = getenv('CUSTOM_HOSTNAME',    'localhost')
-port     : int = getenv('RABBITMQ_NODE_PORT',        5672)
-vhost    : str = getenv('RBMQ_VHOST',                 '/')
-username : str = getenv('RBMQ_USERNAME',          'guest')
-password : str = getenv('RBMQ_PASSWORD',          'guest')
-qname    : str = getenv('RBMQ_QUEUE',              'test')
+host: str = getenv('CUSTOM_HOSTNAME', 'localhost')
+port: int = getenv('RABBITMQ_NODE_PORT', 5672)
+vhost: str = getenv('RBMQ_VHOST', '/')
+qname: str = getenv('RBMQ_QUEUE', 'test')
+username: str = getenv('RBMQ_USERNAME', 'guest')
+password: str = getenv('RBMQ_PASSWORD', 'guest')
 
 
 def create_connection() -> pika.BlockingConnection:
@@ -37,7 +37,8 @@ def main(connection: pika.BlockingConnection):
         print(f">>> 📨 Received  '{body}' ")
 
     channel.queue_declare(qname)
-    channel.basic_consume(queue=qname, auto_ack=True, on_message_callback=callback)
+    channel.basic_consume(queue=qname, auto_ack=True,
+                          on_message_callback=callback)
 
     print(">>> Waiting for messages 🤹 Press CTRL+C to exit ⛔")
     channel.start_consuming()
