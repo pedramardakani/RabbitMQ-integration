@@ -30,6 +30,9 @@ def main(connection: pika.BlockingConnection):
 
     channel = connection.channel()
 
+    # Give RabbitMQ a hint for a fair dispatch
+    channel.basic_qos(prefetch_count=1)
+
     # Logic
     def callback(channel: pika.channel.Channel,
                  method: pika.spec.Basic.Deliver,
