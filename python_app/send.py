@@ -23,7 +23,7 @@ channel.queue_declare(qname)
 
 message = " ".join(argv[1:]) or "some message"
 
-channel.basic_publish('' , qname, message)
+channel.basic_publish(exchange='' , routing_key=qname, body=message)
 
 # Close connection after done
 connection.close()
